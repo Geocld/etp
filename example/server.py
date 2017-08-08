@@ -7,4 +7,4 @@ from etp.application import Stp
 
 stp = Stp()
 
-stp.run()
+stp.run(port=9090)
