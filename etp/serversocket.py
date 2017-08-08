@@ -44,6 +44,5 @@ class ServerSocket:
 
         while True:
             sock, addr = self._socket.accept()
-            print sock
             t = threading.Thread(target=tcplink, args=(sock, addr))
             t.start()
