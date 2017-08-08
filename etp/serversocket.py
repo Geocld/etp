@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+import time
 import socket
+import threading
 
 class ServerSocket:
     def __init__(self, mode='localhost', port=8080):
@@ -14,11 +17,29 @@ class ServerSocket:
         else:
             self.host = mode
 
-        # 创建基于TCP的流式socket通信,非阻塞
+        # 创建基于TCP的流式socket通信
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.setblocking(0)
+        # self._socket.setblocking(0) # TODO: socket Errno 35 in OSX
         self._socket.bind((self.host, self.port))
 
     def run(self):
         self._socket.listen(5)
-        print 'Waiting for connection...'
+        print 'Server start at: %s:%s' %(self.host, self.port)
+
+        def tcplink(sock, addr):
+            print 'Accept new connection from %s:%s...' % addr
+            sock.send('')
+            while True:
+                data = sock.recv(1024)
+                time.sleep(1)
+                if data == 'exit' or not data:
+                    break
+                print data
+            sock.close()
+            print 'Connection from %s:%s closed' % addr
+
+        while True:
+            sock, addr = self._socket.accept()
+            print sock
+            t = threading.Thread(target=tcplink, args=(sock, addr))
+            t.start()
