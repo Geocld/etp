@@ -7,15 +7,19 @@ import socket
 import threading
 
 class ServerSocket:
-    def __init__(self, mode='localhost', port=8080):
+    def __init__(self, mode='localhost', port=None):
         self.mode = mode
-        self.port = port
         if mode == "localhost":
             self.host = mode
         elif mode == "public":
             self.host = socket.gethostname()
         else:
             self.host = mode
+
+        self.port = port
+        if type(self.port) != int:
+            print("port must be an int")
+            raise ValueError
 
         # 创建基于TCP的流式socket通信
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

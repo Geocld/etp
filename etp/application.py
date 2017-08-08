@@ -8,10 +8,10 @@ class Stp:
     def __init__(self, socket_type='server'):
         self.socket_type = socket_type
 
-    def run(self):
-        ss = ServerSocket()
+    def run(self, port=8080):
+        ss = ServerSocket(port = port)
         ss.run()
 
-    def send(self, data):
-        cs = ClientSocket()
+    def send(self, data, port=8080):
+        cs = ClientSocket(port = port)
         cs.send(data)
