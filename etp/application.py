@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from etp.serversocket import ServerSocket
 from etp.clientsocket import ClientSocket
 
