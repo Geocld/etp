@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('../')
 
 from etp.application import Stp
 
-
 stp = Stp()
 
-stp.run(3000)
+stp.run()
