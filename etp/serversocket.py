@@ -8,8 +8,9 @@ import socket
 import threading
 
 class ServerSocket:
-    def __init__(self, mode='localhost', port=None):
+    def __init__(self, mode=None, port=None, recv_bytes=None):
         self.mode = mode
+        self.recv_bytes = recv_bytes
         if mode == "localhost":
             self.host = mode
         elif mode == "public":
@@ -40,7 +41,7 @@ class ServerSocket:
 
             while True:
                 try:
-                    data = sock.recv(1024)
+                    data = sock.recv(self.recv_bytes)
                 except socket.error as e:
                     if e.errno is errno.ECONNRESET:
                         data = None
