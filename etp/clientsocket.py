@@ -4,7 +4,7 @@
 import socket
 
 class ClientSocket:
-    def __init__(self, mode='localhost', port=None, recv_bytes=2048, single_use=True):
+    def __init__(self, mode=None, port=None, recv_bytes=None, single_use=None):
         self.mode = mode
         self.port = port
         if type(self.port) != int:
@@ -43,6 +43,15 @@ class ClientSocket:
 
         self._socket.send(data)
         self.used = True
+
+        # read the response
+        response = self._socket.recv(self.recv_bytes)
+        if self.single_use:
+            self._socket.close()
+            # Keep track of the fact that this is closed.
+            self.closed = True
+            # Return the response
+        return response
 
     def close(self):
         if not self.closed:
