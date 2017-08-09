@@ -45,12 +45,14 @@ class ClientSocket:
         self.used = True
 
         # read the response
-        response = self._socket.recv(self.recv_bytes)
+        response = self._socket.recv(1024)
         if self.single_use:
             self._socket.close()
             # Keep track of the fact that this is closed.
             self.closed = True
-            # Return the response
+
+        # Return the response
+        print response
         return response
 
     def close(self):

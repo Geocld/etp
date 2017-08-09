@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import errno
 import time
 import socket
 import threading
@@ -23,7 +24,10 @@ class ServerSocket:
 
         # 创建基于TCP的流式socket通信
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # self._socket.setblocking(0) # TODO: socket Errno 35 in OSX
+
+        if "darwin" != sys.platform:
+            self._socket.setblocking(0)
+
         self._socket.bind((self.host, self.port))
 
     def run(self):
@@ -32,12 +36,20 @@ class ServerSocket:
 
         def tcplink(sock, addr):
             print 'Accept new connection from %s:%s...' % addr
-            sock.send('')
+            # sock.send('received')
+
             while True:
-                data = sock.recv(1024)
+                try:
+                    data = sock.recv(1024)
+                except socket.error as e:
+                    if e.errno is errno.ECONNRESET:
+                        data = None
+                    else:
+                        raise e
                 time.sleep(1)
                 if data == 'exit' or not data:
                     break
+                sock.send('received data from client: %s' % data)
                 print data
             sock.close()
             print 'Connection from %s:%s closed' % addr
